@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping(value="movies")
+@RequestMapping(value="movie")
 public class MovieController {
 
     private final GenreRepository genreRepository;
     private final MovieRepository movieRepository;
-    private final int i = 0;
+    
 
 
     public MovieController(GenreRepository genreRepository, MovieRepository movieRepository) {
@@ -31,7 +31,7 @@ public class MovieController {
     }
 
 /*
-SORTING THE MOVIES BY MOVIE TYPE(Original or suggested )
+SEARCHING BY MOVIE TYPE(Original or suggested )
 PATCH http://localhost:9090/movies/type?movietype=original
  */
 
