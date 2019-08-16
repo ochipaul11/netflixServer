@@ -22,7 +22,6 @@ public class ClientController {
     private GenreRepository genreRepository;
     private GenreRepo genreRepo;
 
-
     public ClientController(ClientRepository clientRepository, MovieRepository movieRepository, GenreRepository genreRepository, GenreRepo genreRepo) {
         this.clientRepository = clientRepository;
         this.movieRepository = movieRepository;
@@ -77,6 +76,26 @@ GET http://localhost:9090/client/
     public void deleteClient(@PathVariable Long clientId) {
         clientRepository.deleteById(clientId);
     }
+
+ /*
+ GETTING A LIST OF ALL THE AVAILABLE MOVIES
+ GET http://localhost:9090/client/movies
+ */
+    @GetMapping(value = "movies")
+    public List<Movie> getAllMovies(){
+        return movieRepository.findAll();
+    }
+
+/*
+SEARCHING BY MOVIE TYPE(Original or suggested )
+PATCH http://localhost:9090/client/movies/type?movietype=original
+ */
+    @GetMapping(value = "type")
+    public  List<Movie> searchingByType(@RequestParam String movietype){
+
+        return  movieRepository.findByMovieTypeIsLike(movietype);
+    }
+
 
 /*
 POSTING A MOVIE WITH 2 CATEGORIES USING THE CLIENT ID
