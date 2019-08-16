@@ -5,6 +5,7 @@ import api.netflix.Model.Genre;
 import api.netflix.Model.Movie;
 import api.netflix.NotFoundException;
 import api.netflix.Repository.ClientRepository;
+import api.netflix.Repository.GenreRepo;
 import api.netflix.Repository.GenreRepository;
 import api.netflix.Repository.MovieRepository;
 import org.springframework.web.bind.annotation.*;
@@ -19,38 +20,38 @@ public class ClientController {
     private ClientRepository clientRepository;
     private MovieRepository movieRepository;
     private GenreRepository genreRepository;
+    private GenreRepo genreRepo;
 
-    private int i=0;
 
-    public ClientController(ClientRepository clientRepository, MovieRepository movieRepository, GenreRepository genreRepository) {
+    public ClientController(ClientRepository clientRepository, MovieRepository movieRepository, GenreRepository genreRepository, GenreRepo genreRepo) {
         this.clientRepository = clientRepository;
         this.movieRepository = movieRepository;
         this.genreRepository = genreRepository;
-
+        this.genreRepo = genreRepo;
     }
 
 
-    /*
-    GETTING A LIST OF ALL THE CLIENTS IN THE SYSTEM
-    GET http://localhost:9090/client/
-     */
+/*
+GETTING A LIST OF ALL THE CLIENTS IN THE SYSTEM
+GET http://localhost:9090/client/
+ */
     @GetMapping
     public List<Client> getAllClients() {
         return clientRepository.findAll();
     }
 
-    /*CREATING A NEW CLIENT
-     POST http://localhost:9090/client
-      */
+ /*CREATING A NEW CLIENT
+  POST http://localhost:9090/client
+   */
     @PostMapping
     public Client createClient(@RequestBody Client client) {
 
-        return    clientRepository.save(client);
-    }
+         return    clientRepository.save(client);
+       }
 
-    /*EDITING DETAILS OF A CLIENT
-      PATCH http://localhost:9090/client/14/update
-      */
+/*EDITING DETAILS OF A CLIENT
+  PATCH http://localhost:9090/client/14/update
+  */
     @PatchMapping(value = "{id}/update")
     public Client updateClient(@PathVariable Long id, @RequestBody Client client) {
         if (clientRepository.existsById((long) Math.toIntExact(id))) {
@@ -68,19 +69,19 @@ public class ClientController {
         return client;
     }
 
-    /*
-      DELETING A CLIENT BY ID
-      DELETE http://localhost:9090/client/deleteClient/14
-     */
+/*
+ DELETING A CLIENT BY ID
+ DELETE http://localhost:9090/client/deleteClient/14
+*/
     @DeleteMapping(value = "deleteCluent/{clientId}")
     public void deleteClient(@PathVariable Long clientId) {
         clientRepository.deleteById(clientId);
     }
 
-    /*
-    ADDING A MOVIE WITH 2 CATEGORIES
-    POST  http://localhost:9090/movie/type?movietype=original
-     */
+/*
+POSTING A MOVIE WITH 2 CATEGORIES USING THE CLIENT ID
+POST  http://localhost:9090/client/14/addMovie/3/4
+ */
     @PostMapping(value = "{clientId}/addMovie/{genre3}/{genre4}")
     public Movie createMovie(@PathVariable int clientId, @PathVariable Long genre3, @PathVariable Long genre4, @RequestBody Movie movie) {
         if (clientRepository.existsClientById(clientId)) {
@@ -98,14 +99,14 @@ public class ClientController {
             movie.setClient(client);
             movieRepository.save(movie);
         } else {
-            // clientRepository.findById((Int) clientId).orElseThrow(() -> new NotFoundException("No client with ID: " + clientId + " available for update"));
+           // clientRepository.findById((Int) clientId).orElseThrow(() -> new NotFoundException("No client with ID: " + clientId + " available for update"));
         }
         return movie;
     }
-    /*
-    EDITING A MOVIE SUGGESTED BY CLIENT
-    PATCH http://localhost:9090/client/14/editMovie/11
-     */
+/*
+PATCHING/EDITING A MOVIE SUGGESTED BY CLIENT
+PATCH http://localhost:9090/client/14/editMovie/11
+ */
     @PatchMapping(value = "{clientId}/editMovie/{movieId}")
     public Movie patchMovie(@PathVariable Long clientId, @PathVariable Long movieId, @RequestBody Movie movie) {
         if (clientRepository.existsById(clientId)) {
@@ -120,10 +121,10 @@ public class ClientController {
         }
         return movie;
     }
-    /*
-    DELETING MOVIE BY ID
-    DELETE http://localhost:9090/client/14/deleteMovie/11
-     */
+/*
+DELETING MOVIE BY ID
+DELETE http://localhost:9090/client/14/deleteMovie/11
+ */
     @DeleteMapping(value = "{clientId}/deleteMovie/{id}")
     public void deleteMovie(@PathVariable Long clientId, @PathVariable Long movieId) {
         if (clientRepository.existsById(clientId)) {
@@ -133,10 +134,10 @@ public class ClientController {
             clientRepository.findById(movieId).orElseThrow(() -> new NotFoundException("Client of Movie entered does not Exit"));
         }
     }
-    /*
-    GETTING LIST OF GENRES
-    GET http://localhost:9090/client/genre
-     */
+/*
+GETTING LIST OF GENRES
+GET http://localhost:9090/client/genre
+ */
     @GetMapping(value = "/genre")
     public List<Genre> genre() {
         return genreRepository.findAll();
