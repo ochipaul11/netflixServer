@@ -5,7 +5,7 @@ import api.netflix.Model.Genre;
 import api.netflix.Model.Movie;
 import api.netflix.NotFoundException;
 import api.netflix.Repository.ClientRepository;
-import api.netflix.Repository.GenreRepo;
+
 import api.netflix.Repository.GenreRepository;
 import api.netflix.Repository.MovieRepository;
 import org.springframework.web.bind.annotation.*;
@@ -20,13 +20,13 @@ public class ClientController {
     private ClientRepository clientRepository;
     private MovieRepository movieRepository;
     private GenreRepository genreRepository;
-    private GenreRepo genreRepo;
 
-    public ClientController(ClientRepository clientRepository, MovieRepository movieRepository, GenreRepository genreRepository, GenreRepo genreRepo) {
+
+    public ClientController(ClientRepository clientRepository, MovieRepository movieRepository, GenreRepository genreRepository) {
         this.clientRepository = clientRepository;
         this.movieRepository = movieRepository;
         this.genreRepository = genreRepository;
-        this.genreRepo = genreRepo;
+
     }
 
 
