@@ -53,7 +53,7 @@ GET http://localhost:9090/client/
   */
     @PatchMapping(value = "{id}/update")
     public Client updateClient(@PathVariable Long id, @RequestBody Client client) {
-        if (clientRepository.existsById((long) Math.toIntExact(id))) {
+        if (clientRepository.existsById(id)) {
             Client updateClient = clientRepository.findClientById(Math.toIntExact(id));
             updateClient.setClientName(client.getClientName());
             //updateClient.setIdentificationNumber(client.getIdentificationNumber());
@@ -64,6 +64,8 @@ GET http://localhost:9090/client/
 
 
             NotFoundException notFoundException = new NotFoundException("No client with such id is available for update");
+
+
         }
         return client;
     }
@@ -72,7 +74,7 @@ GET http://localhost:9090/client/
  DELETING A CLIENT BY ID
  DELETE http://localhost:9090/client/deleteClient/14
 */
-    @DeleteMapping(value = "deleteCluent/{clientId}")
+    @DeleteMapping(value = "deleteClient/{clientId}")
     public void deleteClient(@PathVariable Long clientId) {
         clientRepository.deleteById(clientId);
     }
@@ -127,16 +129,16 @@ PATCHING/EDITING A MOVIE SUGGESTED BY CLIENT
 PATCH http://localhost:9090/client/14/editMovie/11
  */
     @PatchMapping(value = "{clientId}/editMovie/{movieId}")
-    public Movie patchMovie(@PathVariable Long clientId, @PathVariable Long movieId, @RequestBody Movie movie) {
-        if (clientRepository.existsById(clientId)) {
+    public Movie patchMovie(@PathVariable int clientId, @PathVariable Long movieId, @RequestBody Movie movie) {
+        if (clientRepository.existsById((long) clientId)) {
             Movie updating = movieRepository.findById(movieId).orElseThrow(() -> new NotFoundException("No movie with id " + movie.getId() + " is available for update"));
-            Client updatingClient = clientRepository.findClientByIdentificationNumber(clientId);
+            Client updatingClient = clientRepository.findClientById(clientId);
             updating.setMovieName(movie.getMovieName());
             updating.setMovieType(movie.getMovieType());
             updating.setClient(updatingClient);
             movieRepository.save(updating);
         } else {
-            clientRepository.findById(clientId).orElseThrow(() -> new NotFoundException("No client with ID: " + clientId + " exists"));
+            clientRepository.findById((long) clientId).orElseThrow(() -> new NotFoundException("No client with ID: " + clientId + " exists"));
         }
         return movie;
     }
@@ -147,10 +149,10 @@ DELETE http://localhost:9090/client/14/deleteMovie/11
     @DeleteMapping(value = "{clientId}/deleteMovie/{id}")
     public void deleteMovie(@PathVariable Long clientId, @PathVariable Long movieId) {
         if (clientRepository.existsById(clientId)) {
-            Client deletingClient = clientRepository.findClientByIdentificationNumber(clientId);
+            Client deletingClient = clientRepository.findClientById(Math.toIntExact(clientId));
             movieRepository.deleteById(movieId);
         } else {
-            clientRepository.findById(movieId).orElseThrow(() -> new NotFoundException("Client of Movie entered does not Exit"));
+            clientRepository.findById(clientId).orElseThrow(() -> new NotFoundException("Client not allowed to delete movie not created"));
         }
     }
 /*
