@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface ClientRepository extends JpaRepository<Client, Long > {
 
     boolean existsByIdentificationNumber  (Long id );
-   Client findClientByIdentificationNumber(Long id);
+
 
    //Optional<Client> findById(Integer id);
 
